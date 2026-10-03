@@ -1,0 +1,36 @@
+<html>
+<head>
+    <title>newuser</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="login">
+    <input type="text" placeholder="name" id="name">
+    <input type="password" placeholder="strong password" id="password">
+    <button id="submit">submit</button>
+</div>
+</body>
+<script>
+    const button=document.getElementById("submit");
+    button.addEventListener("click",async () => {
+        const username = document.getElementById("name").value;
+        const password = document.getElementById("password").value;
+        const response = await fetch("http://localhost:8080/api/adduser", {
+            method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({name:username,
+                password:password})
+        });
+        const result=response.ok;
+        if(result===true){
+            return document.location.href="hi.html";
+        }
+        else{
+            return document.location.href="newuser.html";
+        }
+
+    });
+</script>
+</html>

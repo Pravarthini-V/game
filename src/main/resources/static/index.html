@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+   <div class="login">
+       <input type="text" placeholder="username" id="name">
+       <input type="password" placeholder="password" id="value">
+       <button id="button">submit</button>
+   </div>
+</body>
+<script>
+
+    const button=document.getElementById("button");
+    button.addEventListener("click",async () => {
+        const username = document.getElementById("name").value;
+        const password = document.getElementById("value").value;
+        const response = await fetch("http://localhost:8080/api/existinguse", {
+            method: "POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify({name:username,
+                password:password})
+        });
+        const result=response.ok;
+        if(result===true){
+            return document.location.href="rockpaper.html";
+        }
+        else{
+            return  document.location.href="newuser.html";
+        }
+
+    });
+</script>
+</html>

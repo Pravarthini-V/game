@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rock Paper Scissor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>Rock Paper Scissor</h1>
+
+<button id="rock">Rock</button>
+<button id="paper">Paper</button>
+<button id="scissor">Scissor</button>
+
+<button id="submit">Reset Score</button>
+<button id="autoplay">Autoplay</button>
+
+<p id="output"></p>
+
+<script>
+
+    // Get buttons
+    const rockbutton = document.getElementById("rock");
+    const paperbutton = document.getElementById("paper");
+    const scissorbutton = document.getElementById("scissor");
+
+    // Button events
+    rockbutton.addEventListener("click", () => {
+        playgame("rock");
+    });
+
+    paperbutton.addEventListener("click", () => {
+        playgame("paper");
+    });
+
+    scissorbutton.addEventListener("click", () => {
+        playgame("scissor");
+    });
+
+
+    // Get score from localStorage
+    const score = JSON.parse(localStorage.getItem("score")) || {
+        win: 0,
+        loose: 0,
+        tie: 0
+    };
+
+
+    function playgame(usermove) {
+
+        // Generate random number
+        const computermove = Math.random();
+
+        let computermoves = "";
+
+        // Decide computer move
+        if (computermove >= 0 && computermove < 1 / 3) {
+
+            computermoves = "rock";
+
+        }
+        else if (computermove >= 1 / 3 && computermove < 2 / 3) {
+
+            computermoves = "paper";
+
+        }
+        else {
+
+            computermoves = "scissor";
+
+        }
+
+
+        let result = "";
+
+
+        // Rock
+        if (computermoves === "rock" && usermove === "rock") {
+            result = "tie";
+        }
+
+        if (computermoves === "paper" && usermove === "rock") {
+            result = "loose";
+        }
+
+        if (computermoves === "scissor" && usermove === "rock") {
+            result = "win";
+        }
+
+
+        // Paper
+        if (computermoves === "rock" && usermove === "paper") {
+            result = "win";
+        }
+
+        if (computermoves === "paper" && usermove === "paper") {
+            result = "tie";
+        }
+
+        if (computermoves === "scissor" && usermove === "paper") {
+            result = "loose";
+        }
+
+
+        // Scissor
+        if (computermoves === "rock" && usermove === "scissor") {
+            result = "loose";
+        }
+
+        if (computermoves === "paper" && usermove === "scissor") {
+            result = "win";
+        }
+
+        if (computermoves === "scissor" && usermove === "scissor") {
+            result = "tie";
+        }
+
+
+        // Update score
+        if (result === "win") {
+            score.win += 1;
+        }
+
+        if (result === "loose") {
+            score.loose += 1;
+        }
+
+        if (result === "tie") {
+            score.tie += 1;
+        }
+
+
+        // Save score
+        localStorage.setItem("score", JSON.stringify(score));
+
+
+        // Display score
+        document.getElementById("output").innerHTML =
+            `You: ${usermove} | Computer: ${computermoves}<br>
+             Result: ${result}<br>
+             Win: ${score.win}
+             Loose: ${score.loose}
+             Tie: ${score.tie}`;
+    }
+
+
+    // RESET SCORE
+    document.getElementById("submit").addEventListener("click", () => {
+
+        score.win = 0;
+        score.loose = 0;
+        score.tie = 0;
+
+        localStorage.removeItem("score");
+
+        document.getElementById("output").innerHTML =
+            `Win: ${score.win}
+             Loose: ${score.loose}
+             Tie: ${score.tie}`;
+    });
+
+
+    // AUTOPLAY
+    let id;
+    let auto = false;
+
+    document.getElementById("autoplay").addEventListener("click", () => {
+
+        if (!auto) {
+
+            id = setInterval(() => {
+
+                const random = Math.random();
+
+                let move = "";
+
+                if (random < 1 / 3) {
+                    move = "rock";
+                }
+                else if (random < 2 / 3) {
+                    move = "paper";
+                }
+                else {
+                    move = "scissor";
+                }
+
+                playgame(move);
+
+            }, 3000);
+
+            auto = true;
+
+        }
+        else {
+
+            clearInterval(id);
+
+            auto = false;
+        }
+    });
+
+</script>
+
+</body>
+</html>
